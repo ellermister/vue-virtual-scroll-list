@@ -15,7 +15,6 @@
           :item-class="'stream-item'"
           :item-class-add="addItemClass"
           @resized="onItemRendered"
-          @totop="onTotop"
         >
           <div slot="header" v-show="overflow" class="header">
             <div class="spinner" v-show="!finished"></div>
@@ -123,10 +122,10 @@ export default {
     },
 
     onSendMessage (message) {
-      this.messages.push(message)
-      this.$nextTick(() => {
-        this.setVirtualListToBottom()
-      })
+      this.messages.unshift(message)
+      // this.$nextTick(() => {
+      //   this.setVirtualListToBottom()
+      // })
     },
 
     // update item wrapper class dynamic
@@ -145,9 +144,9 @@ export default {
     receivedRandomMessage () {
       getMessages(1).then((messages) => {
         this.messages = this.messages.concat(messages)
-        this.$nextTick(() => {
-          this.setVirtualListToBottom()
-        })
+        // this.$nextTick(() => {
+        //   this.setVirtualListToBottom()
+        // })
       })
     },
 
