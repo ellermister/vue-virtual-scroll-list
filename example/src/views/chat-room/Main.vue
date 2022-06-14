@@ -10,7 +10,7 @@
           :data-key="'sid'"
           :data-sources="messages"
           :data-component="messageComponent"
-
+          @totop="onTotop"
           :estimate-size="100"
           :item-class="'stream-item'"
           :item-class-add="addItemClass"
@@ -86,20 +86,22 @@ export default {
       this.param.isFetching = true
 
       // get next page
-      getMessages(this.param.pageSize, true).then((messages) => {
+      getMessages(1, true).then((messages) => {
         if (!messages.length) {
           this.finished = true
           return
         }
 
         const sids = getSids(messages)
+        console.log('dd',sids)
         this.messages = messages.concat(this.messages)
         this.$nextTick(() => {
           const vsl = this.$refs.vsl
           const offset = sids.reduce((previousValue, currentSid) => {
-            const previousSize = typeof previousValue === 'string' ? vsl.getSize(previousValue) : previousValue
+            const previousSize = typeof previousValue === 'string' && previousValue !== 0 ? vsl.getSize(previousValue) : previousValue
             return previousSize + this.$refs.vsl.getSize(currentSid)
-          })
+          },0)
+          console.log('wait ,',offset)
           this.setVirtualListToOffset(offset)
 
           this.param.isFetching = false
